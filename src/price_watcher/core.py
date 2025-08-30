@@ -1,20 +1,11 @@
+from .config import PRICE_DROPPED_URL, FEATURED_PRODUCTS_URL
+
 from bs4 import BeautifulSoup
 import sys
 import requests
 import asyncio
 
-# seccion clases
-class product:
-    def __init__(self, title, price, shop):
-        self.title = title
-        self.price = price
-        self.shop = shop
-    def info(self):
-        return f"Product: {self.title} \nPrice: {self.price}\nShop: {self.shop}"
-# fin seccion clases
-
-# seccion funciones
-async def app():
+async def run():
     trys = 0
     try:
         while trys < 5:
@@ -36,8 +27,3 @@ def extract_info(soup):
         price_obj = article.find_all(class_="product-price")
         price_text = ' '.join([p.text.strip() for p in price_obj])
         print(f"Titulo: {title}\nPrecio: {price_text}\nTienda: {shop}\n")
-
-# fin seccion funciones
-
-if __name__ == "__main__":
-    asyncio.run(app())

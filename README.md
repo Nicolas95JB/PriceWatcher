@@ -1,5 +1,7 @@
 # Documento funcional
+
 ## caso de uso
+
 1. Home: Automaticamente tomar seccion "BAJARON DE PRECIO" o "PRODUCTOS DESTACADOS". (definir N paginas)
 2. Permitir la busqueda
     - contemplar no resultados.
@@ -10,5 +12,6 @@
 defino alerta -> busqueda:"monitor lg 27", presupuesto:"400k"
 sumar la definicion de lapso? (1d, 12hs, 6hs)
 
-# Ideas
+## Ideas
+
 - definir palabras clave para manejar "categorias"
