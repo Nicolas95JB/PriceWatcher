@@ -1,1 +1,16 @@
-./src/price_watcher/__pycache__
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+.venv/
+env/
+venv/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Configs locales
+*.env
