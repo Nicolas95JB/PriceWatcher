@@ -29,8 +29,31 @@ presupuesto: "400k"
 lapso: "1d"
 ```
 
-**comandos a correr**
+**Comandos a correr**
 ```text
 pip install -r requirements.txt
 python -m src.price_watcher
+```
+
+**Estructura posible al momento de integrar interfaz grafica**
+```
+mi_app/
+├── main.py            # Punto de entrada: arranca la GUI
+├── app/               # Código de la aplicación
+│   ├── __init__.py
+│   ├── gui/           # Todo lo relacionado a la interfaz
+│   │   ├── __init__.py
+│   │   ├── main_window.py
+│   │   └── widgets.py
+│   ├── controllers/   # Lógica que conecta UI y modelo
+│   │   └── main_controller.py
+│   ├── models/        # Representación de datos / lógica
+│   │   └── vehicle_model.py
+│   ├── utils/         # Funciones auxiliares
+│   │   └── helpers.py
+│   └── config.py      # Parámetros, rutas, constantes globales
+├── tests/             # Tests unitarios (misma estructura que app/)
+│   └── ...
+├── requirements.txt   # Dependencias del proyecto
+└── README.md
 ```
