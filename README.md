@@ -1,17 +1,29 @@
-# Documento funcional
+# 📉 PriceWatcher
 
-## caso de uso
+Un proyecto para **monitorear precios de productos online**, con posibilidad de búsqueda, alertas y seguimiento de bajadas/subidas de precio.
 
-1. Home: Automaticamente tomar seccion "BAJARON DE PRECIO" o "PRODUCTOS DESTACADOS". (definir N paginas)
-2. Permitir la busqueda
-    - contemplar no resultados.
-3. (CORE) Permitir definir una busqueda para un par de horas o un dia max.
-    - a. Se debe poder definir un presupuesto de alerta.
-    - b. Trackear item con menor precio y notificar de subida o bajada.
+---
 
-defino alerta -> busqueda:"monitor lg 27", presupuesto:"400k"
-sumar la definicion de lapso? (1d, 12hs, 6hs)
+## 🚀 Funcionalidad (casos de uso)
 
-## Ideas
+1. **Home**: Obtener automáticamente la sección  
+   - "BAJARON DE PRECIO"  
+   - "PRODUCTOS DESTACADOS"  
+   (se debe poder definir cuántas páginas consultar).
 
-- definir palabras clave para manejar "categorias"
+2. **Búsqueda manual**:
+   - Permitir al usuario buscar productos.
+   - Manejar el caso de **sin resultados**.
+
+3. **(CORE) Alertas y tracking**:
+   - Definir una búsqueda que se ejecuta periódicamente (ej: cada 6h, 12h o 1 día).  
+   - Se puede establecer un **presupuesto de alerta**.  
+   - El sistema trackea el **precio más bajo** encontrado y notifica cuando:  
+     - 🔼 el precio sube  
+     - 🔽 el precio baja
+
+**Ejemplo de alerta**:  
+```text
+busqueda: "monitor lg 27"
+presupuesto: "400k"
+lapso: "1d"
