@@ -27,3 +27,10 @@ Un proyecto para **monitorear precios de productos online**, con posibilidad de 
 busqueda: "monitor lg 27"
 presupuesto: "400k"
 lapso: "1d"
+```
+
+**comandos a correr**
+```text
+pip install -r requirements.txt
+python -m src.price_watcher
+```
