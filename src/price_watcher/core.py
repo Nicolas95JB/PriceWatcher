@@ -1,23 +1,8 @@
-from .config import PRICE_DROPPED_URL, FEATURED_PRODUCTS_URL
-
-from bs4 import BeautifulSoup
-import sys
-import requests
-import asyncio
+from .services import get_featured_products
 
 async def run():
-    trys = 0
-    try:
-        while trys < 5:
-            trys += 1
-            res = requests.get("https://www.hardgamers.com.ar/deals?page=1")
-            if res.status_code == 200:
-                return extract_info(BeautifulSoup(res.text, "lxml"))
-            await asyncio.sleep(300)
-    except requests.RequestException as e:
-        print(f"Error al realizar la solicitud: {e}")
-    finally:
-        print(f"Solicitud finalizada. luego de {trys} intengos.")
+    response = await get_featured_products()
+    extract_info(response)
 
 def extract_info(soup):
     articles = soup.find_all("article")
