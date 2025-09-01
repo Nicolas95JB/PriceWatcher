@@ -6,3 +6,8 @@ class product:
     title: str
     price: int
     shop: str
+    
+@dataclass
+class alert:
+    search_text: str
+    alert_price: int

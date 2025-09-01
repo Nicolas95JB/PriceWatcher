@@ -23,20 +23,27 @@ Un proyecto para **monitorear precios de productos online**, con posibilidad de 
      - 🔽 el precio baja
 
 **Ejemplo de alerta**:  
+
 ```text
 busqueda: "monitor lg 27"
 presupuesto: "400k"
 lapso: "1d"
 ```
 
-**Comandos a correr**
+**Comandos a correr**:
+
 ```text
 pip install -r requirements.txt
-python -m src.price_watcher
+python -m src.app
 ```
 
-**Estructura posible al momento de integrar interfaz grafica**
-```
+---
+
+## 🗒️ TODO
+
+**Estructura posible al momento de integrar interfaz grafica**:
+
+```text
 mi_app/
 ├── main.py            # Punto de entrada: arranca la GUI
 ├── app/               # Código de la aplicación
