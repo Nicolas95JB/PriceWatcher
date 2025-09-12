@@ -126,9 +126,7 @@ aiosqlite     # SQLite async
 
 ## 📚 Documentación Adicional
 
-- **[aprendisaje.md](aprendisaje.md)** - Resumen completo del proceso de refactoring
 - **[CLAUDE.md](CLAUDE.md)** - Guía para Claude Code sobre la arquitectura
-- **[clase-numero-uno.md](clase-numero-uno.md)** - Tutorial paso a paso de conceptos
 
 ---
 
