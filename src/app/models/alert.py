@@ -26,7 +26,6 @@ class Alert:
     id: Optional[int] = None
     
     def __post_init__(self):
-        """Validaciones y valores por defecto"""
         if not self.search_text.strip():
             raise ValueError("El texto de búsqueda no puede estar vacío")
         if self.target_price <= 0:
@@ -35,18 +34,10 @@ class Alert:
             self.created_at = datetime.now()
     
     def is_triggered_by(self, product_price: Decimal) -> bool:
-        """
-        Verifica si esta alerta debería dispararse con el precio dado.
-        
-        Returns:
-            True si el precio es <= al precio objetivo
-        """
         return product_price <= self.target_price
     
     def activate(self):
-        """Activa la alerta"""
         self.is_active = True
     
     def deactivate(self):
-        """Desactiva la alerta"""
         self.is_active = False

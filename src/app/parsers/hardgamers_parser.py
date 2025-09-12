@@ -40,7 +40,6 @@ class HardGamersParser:
         """
         products = []
         
-        # HardGamers usa <article> para cada producto
         articles = soup.find_all("article")
         logger.info(f"Encontrados {len(articles)} artículos en la página")
         
@@ -51,7 +50,6 @@ class HardGamersParser:
                     products.append(product)
             except Exception as e:
                 logger.warning(f"Error parseando artículo: {e}")
-                # Continuamos con el siguiente artículo
                 continue
         
         logger.info(f"Parseados exitosamente {len(products)} productos")
@@ -68,19 +66,16 @@ class HardGamersParser:
         Returns:
             Product object o None si no se puede parsear
         """
-        # Extraer título
         title = cls._extract_title(article)
         if not title:
             logger.warning("Artículo sin título, saltando")
             return None
         
-        # Extraer precio
         price = cls._extract_price(article)
         if not price:
             logger.warning(f"No se pudo extraer precio para: {title}")
             return None
         
-        # Extraer URL (opcional)
         url = cls._extract_url(article)
         
         return Product(
@@ -92,7 +87,6 @@ class HardGamersParser:
     
     @classmethod
     def _extract_title(cls, article: Tag) -> Optional[str]:
-        """Extrae el título del producto desde el artículo HTML."""
         title_element = article.find(class_="product-title")
         if title_element:
             return title_element.text.strip()
@@ -110,7 +104,6 @@ class HardGamersParser:
         if not price_elements:
             return None
         
-        # Combinar todos los textos de precio
         price_text = ' '.join([elem.text.strip() for elem in price_elements])
         
         return cls._parse_price_text(price_text)
@@ -130,27 +123,20 @@ class HardGamersParser:
             return None
         
         try:
-            # Limpiar el texto: quitar símbolos y espacios
             cleaned = price_text.replace('$', '').replace('ARS', '').replace('USD', '').strip()
             
-            # Manejar formato argentino: 19.999,50
             if ',' in cleaned and '.' in cleaned:
-                # Formato: 19.999,50 -> 19999.50
                 parts = cleaned.split(',')
                 if len(parts) == 2:
-                    integer_part = parts[0].replace('.', '')  # Quitar separadores de miles
+                    integer_part = parts[0].replace('.', '')
                     decimal_part = parts[1]
                     cleaned = f"{integer_part}.{decimal_part}"
             
-            # Manejar formato sin decimales: 19.999 -> 19999
             elif '.' in cleaned and not ',' in cleaned:
-                # Verificar si es separador de miles o decimal
                 parts = cleaned.split('.')
-                if len(parts[-1]) <= 2:  # Últimos 2 dígitos = decimales
-                    # Es decimal: 19.50
-                    pass  # Mantener como está
+                if len(parts[-1]) <= 2:
+                    pass
                 else:
-                    # Es separador de miles: 19.999
                     cleaned = cleaned.replace('.', '')
             
             return Decimal(cleaned)
@@ -161,12 +147,9 @@ class HardGamersParser:
     
     @classmethod
     def _extract_url(cls, article: Tag) -> Optional[str]:
-        """Extrae la URL del producto si está disponible."""
-        # Buscar enlaces dentro del artículo
         link = article.find('a', href=True)
         if link:
             href = link['href']
-            # Si es URL relativa, agregar dominio
             if href.startswith('/'):
                 return f"https://www.hardgamers.com.ar{href}"
             return href

@@ -25,25 +25,16 @@ class Product:
     id: Optional[int] = None
     
     def __post_init__(self):
-        """Se ejecuta después de crear el objeto para validaciones"""
         if self.price < 0:
             raise ValueError("El precio no puede ser negativo")
         if not self.title.strip():
             raise ValueError("El título no puede estar vacío")
     
     def display_price(self) -> str:
-        """Formatea el precio para mostrar al usuario"""
         return f"${self.price:,.2f}"
     
     def matches_search(self, search_text: str) -> bool:
-        """
-        Verifica si este producto coincide con una búsqueda.
-        
-        Returns:
-            True si el título contiene el texto de búsqueda (case-insensitive)
-        """
         return search_text.lower() in self.title.lower()
     
     def __str__(self) -> str:
-        """Representación legible del producto"""
         return f"{self.title} - {self.display_price()} ({self.shop})"

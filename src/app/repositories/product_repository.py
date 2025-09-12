@@ -44,7 +44,7 @@ class ProductRepository:
                 VALUES (?, ?, ?, ?)
             """, (
                 product.title,
-                str(product.price),  # Decimal -> str
+                str(product.price),
                 product.shop,
                 product.url
             ))
@@ -135,15 +135,13 @@ class ProductRepository:
             return cursor.rowcount > 0
     
     def _row_to_product(self, row: tuple) -> Product:
-        """Convierte fila SQLite a objeto Product."""
         return Product(
             id=row[0],
             title=row[1], 
-            price=Decimal(row[2]),  # str -> Decimal
+            price=Decimal(row[2]),
             shop=row[3],
             url=row[4]
         )
 
 
-# Instancia global para usar en toda la app
 product_repository = ProductRepository()

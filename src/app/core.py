@@ -17,7 +17,6 @@ from .models import Product, Alert
 from .services import ProductService, AlertService
 from .database import db
 
-# Configurar logging para la aplicación
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -45,7 +44,6 @@ class PriceWatcherCLI:
         """Punto de entrada principal de la aplicación CLI."""
         print("=== PriceWatcher - Monitor de Precios ===\n")
         
-        # Inicializar BD (migrar modelos)
         await self._initialize_database()
         
         while True:
@@ -133,7 +131,6 @@ class PriceWatcherCLI:
             print(f"\n=== RESULTADOS PARA '{search_text}' ({len(products)}) ===")
             self._display_products(products)
             
-            # Ofrecer crear alerta
             if self._ask_yes_no(f"\n¿Crear alerta para '{search_text}'?"):
                 await self._create_alert_for_search(search_text, products)
                 
@@ -186,9 +183,6 @@ class PriceWatcherCLI:
             price_input = input("Precio objetivo (ej: 45000.50): ").strip()
             target_price = Decimal(price_input)
             
-            # En el futuro, aquí preguntaríamos el intervalo
-            # interval = self._ask_interval()
-            
             alert = await self.alert_service.create_alert(search_text, target_price)
             print(f"\n✓ Alerta creada con ID: {alert.id}")
             print(f"Buscaremos '{search_text}' y te notificaremos si encuentra productos <= ${target_price}")
@@ -201,9 +195,8 @@ class PriceWatcherCLI:
         if not products:
             return
         
-        # Sugerir precio basado en el menor precio encontrado
         min_price = min(p.price for p in products)
-        suggested_price = min_price * Decimal("0.9")  # 10% menos
+        suggested_price = min_price * Decimal("0.9")
         
         print(f"\nPrecio más bajo encontrado: ${min_price}")
         price_input = input(f"Precio objetivo (sugerido ${suggested_price}): ").strip()

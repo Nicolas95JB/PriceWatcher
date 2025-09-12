@@ -71,7 +71,6 @@ class ProductService:
             logger.warning("Texto de búsqueda vacío")
             return []
         
-        # Formatear texto para URL (espacios -> +)
         query = search_text.replace(" ", "+")
         url = f"{SEARCH_URL}{query}"
         
@@ -100,9 +99,8 @@ class ProductService:
             try:
                 logger.debug(f"Intento {attempt}/{self.max_retries} para {operation_name}")
                 
-                # Crear sesión HTTP async
                 async with aiohttp.ClientSession(
-                    timeout=aiohttp.ClientTimeout(total=10)  # 10s timeout
+                    timeout=aiohttp.ClientTimeout(total=10)
                 ) as session:
                     
                     async with session.get(url) as response:
@@ -119,9 +117,8 @@ class ProductService:
             except Exception as e:
                 logger.error(f"Error inesperado en intento {attempt}: {e}")
             
-            # Retry delay con exponential backoff
             if attempt < self.max_retries:
-                delay = self.retry_delay * (2 ** (attempt - 1))  # 1s, 2s, 4s...
+                delay = self.retry_delay * (2 ** (attempt - 1))
                 logger.info(f"Esperando {delay}s antes del siguiente intento...")
                 await asyncio.sleep(delay)
         
@@ -129,5 +126,4 @@ class ProductService:
         return None
 
 
-# Instancia global para usar en toda la app
 product_service = ProductService()

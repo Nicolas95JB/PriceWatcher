@@ -160,20 +160,13 @@ class AlertRepository:
             return deleted
     
     def _row_to_alert(self, row: tuple) -> Alert:
-        """
-        Convierte una fila de SQLite en objeto Alert.
-        
-        Args:
-            row: (id, search_text, target_price, is_active, created_at)
-        """
         return Alert(
             id=row[0],
             search_text=row[1],
-            target_price=Decimal(row[2]),  # str -> Decimal
-            is_active=bool(row[3]),        # int -> bool
-            created_at=datetime.fromisoformat(row[4])  # str -> datetime
+            target_price=Decimal(row[2]),
+            is_active=bool(row[3]),
+            created_at=datetime.fromisoformat(row[4])
         )
 
 
-# Instancia global para usar en toda la app
 alert_repository = AlertRepository()

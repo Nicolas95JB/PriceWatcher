@@ -80,7 +80,6 @@ class AlertService:
             created_at=datetime.now()
         )
         
-        # TODO: Guardar check_interval_hours cuando agregemos la columna a la BD
         saved_alert = await self.alert_repository.save(alert)
         
         logger.info(f"Alerta creada con ID: {saved_alert.id}")
@@ -106,7 +105,6 @@ class AlertService:
             logger.warning(f"Alerta {alert_id} no encontrada")
             return None
         
-        # Cambiar estado
         if alert.is_active:
             alert.deactivate()
             logger.info(f"Alerta {alert_id} desactivada")
@@ -137,14 +135,12 @@ class AlertService:
         """
         logger.info(f"Verificando alerta: '{alert.search_text}' <= ${alert.target_price}")
         
-        # Buscar productos actuales para esta alerta
         products = await self.product_service.search_products(alert.search_text)
         
         if not products:
             logger.info(f"No se encontraron productos para: '{alert.search_text}'")
             return [], []
         
-        # Filtrar productos que disparan la alerta
         triggered_products = [
             product for product in products 
             if alert.is_triggered_by(product.price)
@@ -152,7 +148,6 @@ class AlertService:
         
         logger.info(f"Encontrados {len(products)} productos, {len(triggered_products)} disparan alerta")
         
-        # TODO: Cuando tengamos GUI, aquí enviaríamos notificación
         if triggered_products:
             logger.info(f"¡ALERTA DISPARADA! Productos encontrados bajo ${alert.target_price}:")
             for product in triggered_products:
@@ -183,14 +178,12 @@ class AlertService:
                 triggered, all_products = await self.check_alert(alert)
                 results[alert.id] = (triggered, all_products)
                 
-                # Pequeña pausa entre alertas para no sobrecargar el sitio
                 await asyncio.sleep(1)
                 
             except Exception as e:
                 logger.error(f"Error verificando alerta {alert.id}: {e}")
                 results[alert.id] = ([], [])
         
-        # Resumen final
         total_triggered = sum(len(triggered) for triggered, _ in results.values())
         logger.info(f"Verificación completada. {total_triggered} productos disparan alertas")
         
@@ -213,5 +206,4 @@ class AlertService:
         }
 
 
-# Instancia global para usar en toda la app
 alert_service = AlertService()

@@ -10,7 +10,6 @@ from decimal import Decimal
 from datetime import datetime
 import logging
 
-# Configurar logging para ver lo que hace
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -41,23 +40,19 @@ class DatabaseManager:
         Decimal -> TEXT (por precisión)
         datetime -> TEXT (formato ISO)
         """
-        # Manejar Optional[tipo] -> tipo
         origin = get_origin(python_type)
         if origin is not None:
-            # Es un tipo genérico como Optional[int] o Union[int, None]
             args = get_args(python_type)
             if len(args) == 2 and type(None) in args:
-                # Es Optional[SomeType] = Union[SomeType, None]
                 python_type = next(arg for arg in args if arg is not type(None))
         
-        # Mapeo de tipos Python -> SQLite
         type_mapping = {
             str: "TEXT",
             int: "INTEGER", 
             float: "REAL",
-            bool: "INTEGER",  # SQLite no tiene BOOLEAN
-            Decimal: "TEXT",  # Guardamos como string para precisión
-            datetime: "TEXT"  # ISO format: "2024-01-01 12:30:00"
+            bool: "INTEGER",
+            Decimal: "TEXT",
+            datetime: "TEXT"
         }
         
         result = type_mapping.get(python_type, "TEXT")
@@ -86,7 +81,7 @@ class DatabaseManager:
         if not dataclasses.is_dataclass(model_class):
             raise ValueError(f"{model_class} no es una dataclass")
         
-        table_name = model_class.__name__.lower() + "s"  # Product -> products
+        table_name = model_class.__name__.lower() + "s"
         fields = dataclasses.fields(model_class)
         type_hints = get_type_hints(model_class)
         
@@ -97,14 +92,11 @@ class DatabaseManager:
             python_type = type_hints[field.name]
             sql_type = self._get_sql_type(python_type)
             
-            # Construir definición de columna
             column_def = f"{column_name} {sql_type}"
             
-            # PRIMARY KEY para 'id'
             if column_name == "id":
                 column_def += " PRIMARY KEY AUTOINCREMENT"
             else:
-                # NOT NULL si no tiene default value y no es Optional
                 if field.default == dataclasses.MISSING and field.default_factory == dataclasses.MISSING:
                     if not (get_origin(python_type) is type(None) or str(python_type).startswith('typing.Union')):
                         column_def += " NOT NULL"
@@ -136,5 +128,4 @@ class DatabaseManager:
             logger.info(f"Migración completada para {len(model_classes)} modelos")
 
 
-# Instancia global para usar en toda la app
 db = DatabaseManager()
