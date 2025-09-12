@@ -1,66 +1,146 @@
 # 📉 PriceWatcher
 
-Un proyecto para **monitorear precios de productos online**, con posibilidad de búsqueda, alertas y seguimiento de bajadas/subidas de precio.
+Sistema de **monitoreo de precios automatizado** con alertas inteligentes. Rastrea productos de HardGamers.com.ar y te notifica cuando los precios bajan según tus criterios.
 
 ---
 
-## 🚀 Funcionalidad (casos de uso)
+## ✨ Funcionalidades Actuales
 
-1. **Home**: Obtener automáticamente la sección  
-   - "BAJARON DE PRECIO"  
-   - "PRODUCTOS DESTACADOS"  
-   (se debe poder definir cuántas páginas consultar).
+### 🔍 **Búsqueda de Productos**
+- Consulta automática de productos destacados/en oferta
+- Búsqueda manual por texto libre
+- Parsing robusto de precios argentinos complejos
+- Manejo de múltiples formatos: "$19.999,50", "$ 19999"
 
-2. **Búsqueda manual**:
-   - Permitir al usuario buscar productos.
-   - Manejar el caso de **sin resultados**.
+### 🚨 **Sistema de Alertas Avanzado**
+- **Crear alertas** con precio objetivo personalizado
+- **Gestión completa**: activar, desactivar, eliminar alertas  
+- **Verificación manual** de todas las alertas activas
+- **Sugerencias inteligentes** basadas en precios encontrados
+- **Persistencia** en base de datos SQLite
 
-3. **(CORE) Alertas y tracking**:
-   - Definir una búsqueda que se ejecuta periódicamente (ej: cada 6h, 12h o 1 día).  
-   - Se puede establecer un **presupuesto de alerta**.  
-   - El sistema trackea el **precio más bajo** encontrado y notifica cuando:  
-     - 🔼 el precio sube  
-     - 🔽 el precio baja
+### 💾 **Base de Datos Code-First**
+- Models Python definen automáticamente la estructura BD
+- Migración automática: `Product` y `Alert` → tablas SQLite
+- Manejo preciso de precios con `Decimal`
+- Conversiones automáticas Python ↔ SQLite
 
-**Ejemplo de alerta**:  
+---
 
-```text
-busqueda: "monitor lg 27"
-presupuesto: "400k"
-lapso: "1d"
+## 🚀 Instalación y Uso
+
+### **Requisitos**
+- Python 3.8+
+- [uv](https://github.com/astral-sh/uv) package manager
+
+### **Instalación**
+```bash
+# Clonar repositorio
+git clone <repo-url>
+cd PriceWatcher
+
+# Instalar dependencias
+uv sync
+
+# Ejecutar aplicación
+uv run python -m src.app
 ```
 
-**Comandos a correr**:
+### **Uso**
+La aplicación presenta un menú interactivo:
 
-```text
-pip install -r requirements.txt
-python -m src.app
+1. **Ver productos destacados** - Ofertas actuales de HardGamers
+2. **Buscar productos** - Búsqueda por texto + opción de crear alerta
+3. **Gestionar alertas** - CRUD completo de tus alertas
+4. **Verificar alertas** - Chequeo manual de todas las alertas activas
+
+---
+
+## 🏗️ Arquitectura
+
+### **Clean Architecture con Separación de Responsabilidades**
+
+```
+src/app/
+├── models/              # 📊 Datos y validaciones
+│   ├── product.py       # Modelo Product con métodos de negocio
+│   └── alert.py         # Modelo Alert con lógica de alertas
+├── parsers/             # 🔧 Conversión HTML → objetos Python
+│   └── hardgamers_parser.py  # Parser específico para HardGamers
+├── services/            # 🎯 Lógica de negocio
+│   ├── product_service.py    # Búsqueda y obtención de productos
+│   └── alert_service.py      # Gestión y verificación de alertas
+├── repositories/        # 💾 Acceso a datos
+│   ├── product_repository.py # CRUD productos
+│   └── alert_repository.py   # CRUD alertas + conversiones
+├── database.py          # 🗄️ Sistema Code-First + migraciones
+├── core.py             # 🖥️ Interfaz CLI interactiva
+└── config.py           # ⚙️ URLs y configuración
+```
+
+### **Principios Aplicados**
+- **Single Responsibility**: Cada módulo tiene una responsabilidad clara
+- **Repository Pattern**: Abstrae el acceso a datos
+- **Code-First Database**: Models definen la estructura BD
+- **Async/Await**: I/O no bloqueante con aiohttp + aiosqlite
+- **Type Hints**: Código autodocumentado y menos propenso a errores
+
+---
+
+## 🔮 Roadmap Futuro
+
+### **🎨 GUI con Flet** (Próximo)
+- Interfaz gráfica moderna
+- Dashboard de alertas en tiempo real
+- Configuración visual de intervalos (3h/6h/12h/24h)
+
+### **⏰ Background Scheduler** 
+- Verificación automática de alertas
+- Notificaciones push/email
+- Histórico de alertas disparadas
+
+### **🌐 Múltiples Sitios**
+- CompraGamer, MercadoLibre parsers
+- Comparación de precios entre sitios
+- Alertas cross-platform
+
+### **📊 Analytics**
+- Histórico de precios
+- Tendencias y gráficos  
+- Predicción de mejores momentos para comprar
+
+---
+
+## 🛠️ Dependencias
+
+```toml
+[dependencies]
+requests       # HTTP básico (legacy support)
+beautifulsoup4 # HTML parsing
+lxml          # Parser XML/HTML rápido  
+aiohttp       # HTTP requests async
+aiosqlite     # SQLite async
 ```
 
 ---
 
-## 🗒️ TODO
+## 📚 Documentación Adicional
 
-**Estructura posible al momento de integrar interfaz grafica**:
+- **[aprendisaje.md](aprendisaje.md)** - Resumen completo del proceso de refactoring
+- **[CLAUDE.md](CLAUDE.md)** - Guía para Claude Code sobre la arquitectura
+- **[clase-numero-uno.md](clase-numero-uno.md)** - Tutorial paso a paso de conceptos
 
-```text
-mi_app/
-├── main.py            # Punto de entrada: arranca la GUI
-├── app/               # Código de la aplicación
-│   ├── __init__.py
-│   ├── gui/           # Todo lo relacionado a la interfaz
-│   │   ├── __init__.py
-│   │   ├── main_window.py
-│   │   └── widgets.py
-│   ├── controllers/   # Lógica que conecta UI y modelo
-│   │   └── main_controller.py
-│   ├── models/        # Representación de datos / lógica
-│   │   └── vehicle_model.py
-│   ├── utils/         # Funciones auxiliares
-│   │   └── helpers.py
-│   └── config.py      # Parámetros, rutas, constantes globales
-├── tests/             # Tests unitarios (misma estructura que app/)
-│   └── ...
-├── requirements.txt   # Dependencias del proyecto
-└── README.md
-```
+---
+
+## 🤝 Contribución
+
+Este proyecto está diseñado como herramienta de aprendizaje. La arquitectura modular permite agregar fácilmente:
+
+- Nuevos parsers para otros sitios web
+- Diferentes tipos de alertas  
+- Nuevas interfaces (GUI, web, API)
+- Sistemas de notificación
+
+---
+
+*PriceWatcher v2.0 - Arquitectura profesional para monitoreo inteligente de precios* 🚀

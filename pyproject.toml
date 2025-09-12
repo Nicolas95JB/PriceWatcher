@@ -1,0 +1,21 @@
+[project]
+name = "pricewatcher"
+version = "0.1.0"
+description = "Un proyecto para monitorear precios de productos online"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+dependencies = [
+    "requests",
+    "beautifulsoup4",
+    "lxml", 
+    "aiosqlite",  # SQLite async para no bloquear la aplicación
+    "aiohttp",    # HTTP requests async - reemplaza a requests
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
